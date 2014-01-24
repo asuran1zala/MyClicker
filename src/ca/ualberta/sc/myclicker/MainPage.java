@@ -12,7 +12,7 @@ public class MainPage extends Activity
 	{
 
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main_page);
+		setContentView(R.layout.activity_main);
 	}
 
 	@Override
