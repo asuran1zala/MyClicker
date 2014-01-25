@@ -18,4 +18,28 @@
         android:text="Clicker Name"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="500px"
+        android:layout_height="100px"
+        android:layout_alignLeft="@+id/textView1"
+        android:layout_below="@+id/textView1"
+        android:text="+" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="500px"
+        android:layout_height="100px"
+        android:layout_alignLeft="@+id/button1"
+        android:layout_below="@+id/button1"
+        android:text="-" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/button2"
+        android:layout_below="@+id/button2"
+        android:text="Stats" />
+
 </RelativeLayout> 
