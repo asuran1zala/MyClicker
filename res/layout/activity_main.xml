@@ -6,14 +6,38 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".MainPage" >
+    tools:context=".Main" >
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/newClicker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:text="New Clicker" />
 
-</RelativeLayout>
+    <EditText
+        android:id="@+id/editText1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/newClicker"
+        android:layout_marginLeft="13dp"
+        android:layout_toRightOf="@+id/newClicker"
+        android:ems="10"
+        android:hint="Clicker Name" >
+
+        <requestFocus />
+    </EditText>
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/newClicker"
+        android:layout_below="@+id/newClicker"
+        android:layout_marginTop="19dp"
+        android:textStyle= "bold"
+        android:text="Clickers:"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+</RelativeLayout> 
