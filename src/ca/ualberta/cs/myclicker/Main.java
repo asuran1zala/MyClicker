@@ -13,14 +13,18 @@ import android.os.Bundle;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class Main extends Activity
@@ -66,8 +70,23 @@ public class Main extends Activity
 				
 			}
 		});
+		
+		clickerList.setOnItemClickListener(new OnItemClickListener() 
+		{
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+	              int position, long id)
+			{
+				String product = ((TextView) view).getText().toString();
+				Intent i = new Intent(getApplicationContext(), Clicker.class);
+				i.putExtra("product", product);
+				startActivity(i);
+			}
+		});
+		
 	}
 	
+
 	private String[] loadFromFile() {
 		ArrayList<String> cNames = new ArrayList<String>();
 		try {
