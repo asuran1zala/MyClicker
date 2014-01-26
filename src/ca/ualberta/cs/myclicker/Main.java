@@ -77,9 +77,9 @@ public class Main extends Activity
 			public void onItemClick(AdapterView<?> parent, View view,
 	              int position, long id)
 			{
-				String product = ((TextView) view).getText().toString();
+				String cName = ((TextView) view).getText().toString();
 				Intent i = new Intent(getApplicationContext(), Clicker.class);
-				i.putExtra("product", product);
+				i.putExtra("cName", cName);
 				startActivity(i);
 			}
 		});

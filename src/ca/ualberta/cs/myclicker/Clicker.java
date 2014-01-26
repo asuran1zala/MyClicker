@@ -14,6 +14,14 @@ public class Clicker extends Activity
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.setContentView(R.layout.single_list_item_view);
+        this.setContentView(R.layout.clicker_activity);
+        
+        TextView txtProduct = (TextView) findViewById(R.id.Clicker_Name);
+        
+        Intent i = getIntent();
+        // getting attached intent data
+        String cName = i.getStringExtra("cName");
+        // displaying selected product name
+        txtProduct.setText(cName + ":");
 	}
 }
