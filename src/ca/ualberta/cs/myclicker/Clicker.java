@@ -12,7 +12,9 @@ import java.util.Date;
 
 import ca.ualberta.cs.myclicker.R;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -26,9 +28,10 @@ import android.widget.Toast;
 
 public class Clicker extends Activity
 {
-	public static final String FILENAME = "clicker.sav";
+	public static final String FILENAME = "file.sav";
 	public TextView number;
 	public int count;
+	public String cName = "";
 	@Override
     public void onCreate(Bundle savedInstanceState) 
 	{
@@ -40,14 +43,30 @@ public class Clicker extends Activity
         TextView txtProduct = (TextView) findViewById(R.id.Clicker_Name);
         number  = (TextView) findViewById(R.id.number);
         
-        //String cNames = loadFromFile();
-        //number.setText(cNames.toString());
+        
         
         Intent i = getIntent();
         // getting attached intent data
-        String cName = i.getStringExtra("cName");
+        cName = i.getStringExtra("cName");
         // displaying selected product name
         txtProduct.setText(cName + ": ");
+        
+        String[] cArray = loadFromFile().split(",");
+           	
+        if (cArray.length == 1)
+        {
+        	number.setText("0");
+        }
+        else
+        {
+        	count = Integer.parseInt(cArray[1].toString().trim());
+        	number.setText(String.valueOf(count));
+        	
+        	
+        }
+        
+        
+        
         
         
         Button addbutton = (Button) findViewById(R.id.add);
@@ -57,15 +76,17 @@ public class Clicker extends Activity
 			@Override
         	public void onClick(View v) 
         	{
-				setResult(RESULT_OK);
+				//setResult(RESULT_OK);
 				String text = number.getText().toString();
+				
+				
 				
 				count = Integer.parseInt(text);
 				
 				count++;
         		number.setText(String.valueOf(count));
         		text = number.getText().toString();
-        		saveInFile("text", new Date(System.currentTimeMillis()));
+        		saveInFile(cName + ", "+ text  + "\n", new Date(System.currentTimeMillis()));
         		
         	}
         });
@@ -88,8 +109,34 @@ public class Clicker extends Activity
 				}
         		number.setText(String.valueOf(count));
         		text = number.getText().toString();
-        		saveInFile("text", new Date(System.currentTimeMillis()));
+        		saveInFile(cName + ", "+ text + "\n", new Date(System.currentTimeMillis()));
         		
+        	}
+        });
+        Button delbutton = (Button) findViewById(R.id.delete);
+        delbutton.setOnClickListener(new OnClickListener() 
+        {
+        	@Override
+        	public void onClick(View v) 
+        	{
+        		AlertDialog.Builder builder1 = new AlertDialog.Builder(Clicker.this);
+                builder1.setMessage("Are you sure you want delete this clicker?");
+                builder1.setCancelable(true);
+                builder1.setPositiveButton("Yes",
+                        new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+                builder1.setNegativeButton("No",
+                        new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+
+                AlertDialog alert11 = builder1.create();
+                alert11.show();
         	}
         });
         
@@ -103,6 +150,17 @@ public class Clicker extends Activity
 			BufferedReader in = new BufferedReader(new InputStreamReader(fis));
 			
 			line = in.readLine();
+			while (line != null){
+				if (line.startsWith(cName))
+				{
+					Toast toast=Toast.makeText(getApplicationContext(), cName, Toast.LENGTH_SHORT);  
+				    toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL, 0, 0);
+				    toast.show();
+					break;
+				}
+				line = in.readLine();
+			}
+
 			fis.close();
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -117,8 +175,8 @@ public class Clicker extends Activity
 	private void saveInFile(String text, Date date) {
 		try {
 			FileOutputStream fos = openFileOutput(FILENAME,
-					Context.MODE_APPEND);
-			fos.write(new String(text).getBytes());
+					Context.MODE_PRIVATE);
+			fos.write(text.getBytes());
 			
 			fos.close();
 		} catch (FileNotFoundException e) {

@@ -67,7 +67,7 @@ public class Main extends Activity
 				else
 				{
 					saveInFile(text, new Date(System.currentTimeMillis()));
-					String[] cNames = loadFromFile();
+					String[] cNames = loadsFromFile();
 					ArrayAdapter<String> newadapter = new ArrayAdapter<String>(Main.this,
 							R.layout.list_item, cNames);
 					clickerList.setAdapter(newadapter);
@@ -93,7 +93,7 @@ public class Main extends Activity
 	}
 	
 
-	private String[] loadFromFile() {
+	private String[] loadsFromFile() {
 		ArrayList<String> cNames = new ArrayList<String>();
 		try {
 			FileInputStream fis = openFileInput(FILENAME);
@@ -136,7 +136,7 @@ public class Main extends Activity
 	protected void onStart() {
 		// TODO Auto-generated method stub
 		super.onStart();
-		String[] cNames = loadFromFile();
+		String[] cNames = loadsFromFile();
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
 				R.layout.list_item, cNames);
 		clickerList.setAdapter(adapter);
