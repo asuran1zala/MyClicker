@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Date;
-import ca.ualberta.sc.myclicker.R;
+import ca.ualberta.cs.myclicker.R;
 import android.os.Bundle;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -52,7 +52,19 @@ public class Main extends Activity
 			{
 				setResult(RESULT_OK);
 				String text = bodyText.getText().toString();
-				if (text.length() > 0)
+				if (text.trim().length() == 0)
+				{
+					Toast toast=Toast.makeText(getApplicationContext(), "Clicker Name Empty", Toast.LENGTH_SHORT);  
+				    toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL, 0, 0);
+				    toast.show();
+				}
+				else if (text.trim().length() > 10)
+				{
+					Toast toast=Toast.makeText(getApplicationContext(), "Limit size of 10 characters", Toast.LENGTH_SHORT);  
+				    toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL, 0, 0);
+				    toast.show();
+				}
+				else
 				{
 					saveInFile(text, new Date(System.currentTimeMillis()));
 					String[] cNames = loadFromFile();
@@ -60,12 +72,6 @@ public class Main extends Activity
 							R.layout.list_item, cNames);
 					clickerList.setAdapter(newadapter);
 					newadapter.notifyDataSetChanged();
-				}
-				else
-				{
-					Toast toast=Toast.makeText(getApplicationContext(), "Clicker Name Empty", Toast.LENGTH_SHORT);  
-				     toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL, 0, 0);
-				     toast.show();
 				}
 				
 			}
@@ -109,7 +115,7 @@ public class Main extends Activity
 		return cNames.toArray(new String[cNames.size()]);
 	}
 	
-	private void saveInFile(String text, Date date) {
+	void saveInFile(String text, Date date) {
 		try {
 			FileOutputStream fos = openFileOutput(FILENAME,
 					Context.MODE_APPEND);
