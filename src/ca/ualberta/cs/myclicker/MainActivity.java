@@ -8,10 +8,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Date;
-
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import android.os.Bundle;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -36,8 +33,7 @@ public class MainActivity extends Activity
 	private static final String FILENAME = "file.sav";
 	private EditText bodyText;
 	private ListView clickerList;
-	private final GsonBuilder gsonBuilder = new GsonBuilder();
-	private final Gson gson = gsonBuilder.create();
+	final Gson gson = new Gson();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -49,9 +45,6 @@ public class MainActivity extends Activity
 		Button newClicker = (Button) findViewById(R.id.newClicker);
 		bodyText = (EditText) findViewById(R.id.cName);
 		clickerList = (ListView) findViewById(R.id.clickers);
-		
-		gsonBuilder.registerTypeAdapter(Clicker.class, new ClickerSerialiser());
-		gsonBuilder.registerTypeAdapter(Clicker.class, new ClickerSerialiser());
 		
 		newClicker.setOnClickListener(new OnClickListener()
 		{
@@ -111,11 +104,10 @@ public class MainActivity extends Activity
 			FileInputStream fis = openFileInput(FILENAME);
 			BufferedReader in = new BufferedReader(new InputStreamReader(fis));
 			
-			String line = in.readLine();
-			gson.toJson(line);
+			Clicker line = gson.fromJson(in.readLine(), Clicker.class);
 			while (line != null) {
-				cNames.add(line);
-				line = in.readLine();
+				cNames.add(line.getClickerName());
+				line = gson.fromJson(in.readLine(), Clicker.class);
 			}
 
 		} catch (FileNotFoundException e) {
@@ -132,7 +124,7 @@ public class MainActivity extends Activity
 		try {
 			FileOutputStream fos = openFileOutput(FILENAME,
 					Context.MODE_APPEND);
-			fos.write(gson.toJson(clicker).toString().getBytes());
+			fos.write(new String(gson.toJson(clicker) + "\n").getBytes());
 			fos.close();
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
