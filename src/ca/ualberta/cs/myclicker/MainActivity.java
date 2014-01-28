@@ -8,14 +8,16 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Date;
-import ca.ualberta.cs.myclicker.R;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import android.os.Bundle;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.Gravity;
-import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -27,12 +29,15 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class Main extends Activity
+
+public class MainActivity extends Activity
 {
 	
 	private static final String FILENAME = "file.sav";
 	private EditText bodyText;
 	private ListView clickerList;
+	private final GsonBuilder gsonBuilder = new GsonBuilder();
+	private final Gson gson = gsonBuilder.create();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -45,20 +50,23 @@ public class Main extends Activity
 		bodyText = (EditText) findViewById(R.id.cName);
 		clickerList = (ListView) findViewById(R.id.clickers);
 		
+		gsonBuilder.registerTypeAdapter(Clicker.class, new ClickerSerialiser());
+		gsonBuilder.registerTypeAdapter(Clicker.class, new ClickerSerialiser());
+		
 		newClicker.setOnClickListener(new OnClickListener()
 		{
 			@SuppressLint("NewApi")
 			public void onClick(View v) 
 			{
 				setResult(RESULT_OK);
-				String text = bodyText.getText().toString();
-				if (text.trim().length() == 0)
+				String name = bodyText.getText().toString();
+				if (name.trim().length() == 0)
 				{
 					Toast toast=Toast.makeText(getApplicationContext(), "Clicker Name Empty", Toast.LENGTH_SHORT);  
 				    toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL, 0, 0);
 				    toast.show();
 				}
-				else if (text.trim().length() > 10)
+				else if (name.trim().length() > 10)
 				{
 					Toast toast=Toast.makeText(getApplicationContext(), "Limit size of 10 characters", Toast.LENGTH_SHORT);  
 				    toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL, 0, 0);
@@ -66,9 +74,13 @@ public class Main extends Activity
 				}
 				else
 				{
-					saveInFile(text, new Date(System.currentTimeMillis()));
+					final Clicker clicker = new Clicker();
+					clicker.setClickerName(name);
+					clicker.setCount("0");
+					
+					saveInFile(clicker, new Date(System.currentTimeMillis()));
 					String[] cNames = loadsFromFile();
-					ArrayAdapter<String> newadapter = new ArrayAdapter<String>(Main.this,
+					ArrayAdapter<String> newadapter = new ArrayAdapter<String>(MainActivity.this,
 							R.layout.list_item, cNames);
 					clickerList.setAdapter(newadapter);
 					newadapter.notifyDataSetChanged();
@@ -84,7 +96,7 @@ public class Main extends Activity
 	              int position, long id)
 			{
 				String cName = ((TextView) view).getText().toString();
-				Intent i = new Intent(getApplicationContext(), Clicker.class);
+				Intent i = new Intent(getApplicationContext(), ClickerActivity.class);
 				i.putExtra("cName", cName);
 				startActivity(i);
 			}
@@ -100,6 +112,7 @@ public class Main extends Activity
 			BufferedReader in = new BufferedReader(new InputStreamReader(fis));
 			
 			String line = in.readLine();
+			gson.toJson(line);
 			while (line != null) {
 				cNames.add(line);
 				line = in.readLine();
@@ -115,13 +128,11 @@ public class Main extends Activity
 		return cNames.toArray(new String[cNames.size()]);
 	}
 	
-	void saveInFile(String text, Date date) {
+	void saveInFile(Clicker clicker, Date date) {
 		try {
 			FileOutputStream fos = openFileOutput(FILENAME,
 					Context.MODE_APPEND);
-			fos.write(new String(text + "\n")
-					.getBytes());
-			
+			fos.write(gson.toJson(clicker).toString().getBytes());
 			fos.close();
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -141,4 +152,7 @@ public class Main extends Activity
 				R.layout.list_item, cNames);
 		clickerList.setAdapter(adapter);
 	}
+	
 }
+
+
