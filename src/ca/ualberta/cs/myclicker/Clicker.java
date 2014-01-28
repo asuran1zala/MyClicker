@@ -29,4 +29,14 @@ public class Clicker
 	
 		Count = count;
 	}
+	
+	
+	@Override
+	public String toString() 
+	{
+	    final StringBuilder formatted = new StringBuilder();
+	    formatted.append(ClickerName).append(Count);
+	    formatted.append("123123123");
+	    return formatted.toString();
+	}
 }

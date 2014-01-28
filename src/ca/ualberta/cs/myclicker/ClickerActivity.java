@@ -10,8 +10,6 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Date;
 
-import org.json.JSONObject;
-
 import com.google.gson.Gson;
 
 import ca.ualberta.cs.myclicker.R;
@@ -36,7 +34,6 @@ public class ClickerActivity extends Activity
 	public int count;
 	public String cName = "";
 	final Gson gson = new Gson();
-	JSONObject js = new JSONObject();
 	
 	
 	@Override
@@ -105,7 +102,7 @@ public class ClickerActivity extends Activity
 				}
         		number.setText(String.valueOf(count));
         		text = number.getText().toString();
-        		saveInFile(text, new Date(System.currentTimeMillis()));
+        		//saveInFile(cName + ", "+ text, new Date(System.currentTimeMillis()));
         		
         	}
         });
@@ -168,11 +165,11 @@ public class ClickerActivity extends Activity
 	
 	private void saveInFile(String text, Date date) {
 		try {
-			FileInputStream fis = openFileInput(FILENAME);
-			BufferedReader in = new BufferedReader(new InputStreamReader(fis));
+			FileOutputStream fos = openFileOutput(FILENAME,
+					Context.MODE_PRIVATE);
 			fos.write(text.getBytes());
 			
-			fis.close();
+			fos.close();
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
