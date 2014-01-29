@@ -2,12 +2,15 @@ package ca.ualberta.cs.myclicker;
 
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.Date;
 
 import com.google.gson.Gson;
@@ -29,11 +32,13 @@ import android.widget.Toast;
 
 public class ClickerActivity extends Activity
 {
-	public static final String FILENAME = "file.sav";
+	public static final String FILENAME= "file.sav";	
+	public static final String TEMP = "temp.sav";
 	public TextView number;
 	public int count;
 	public String cName = "";
 	final Gson gson = new Gson();
+	Clicker clicker = new Clicker();
 	
 	
 	@Override
@@ -55,8 +60,8 @@ public class ClickerActivity extends Activity
         // displaying selected product name
         txtProduct.setText(cName + ": ");
         
-        String cArray = loadFromFile();
-        number.setText(String.valueOf(cArray));
+        String counter = loadFromFile();
+        number.setText(String.valueOf(counter));
         
         
         
@@ -79,7 +84,8 @@ public class ClickerActivity extends Activity
 				count++;
         		number.setText(String.valueOf(count));
         		text = number.getText().toString();
-        		//saveInFile(cName + ", "+ text  + "\n", new Date(System.currentTimeMillis()));
+        		clicker.setCount(text);
+        		saveInFile(text, new Date(System.currentTimeMillis()));
         		
         	}
         });
@@ -102,7 +108,8 @@ public class ClickerActivity extends Activity
 				}
         		number.setText(String.valueOf(count));
         		text = number.getText().toString();
-        		//saveInFile(cName + ", "+ text, new Date(System.currentTimeMillis()));
+        		
+        		//saveInFile(text, new Date(System.currentTimeMillis()));
         		
         	}
         });
@@ -143,10 +150,11 @@ public class ClickerActivity extends Activity
 			BufferedReader in = new BufferedReader(new InputStreamReader(fis));
 			
 			Clicker liner = gson.fromJson(in.readLine(), Clicker.class);
-			while (line != null) 
+			while (liner != null) 
 			{
-				if (liner.getClickerName().startsWith(cName))
+				if (liner.getClickerName().equals(cName))
 				{
+					clicker = liner;
 					line = liner.getCount();
 					break;
 				}
@@ -165,11 +173,44 @@ public class ClickerActivity extends Activity
 	
 	private void saveInFile(String text, Date date) {
 		try {
-			FileOutputStream fos = openFileOutput(FILENAME,
-					Context.MODE_PRIVATE);
-			fos.write(text.getBytes());
+			FileInputStream fis = openFileInput(FILENAME);
+			BufferedReader in = new BufferedReader(new InputStreamReader(fis));
 			
+			FileOutputStream fos = openFileOutput(TEMP,
+					Context.MODE_PRIVATE);
+			
+			Clicker liner = gson.fromJson(in.readLine(), Clicker.class);
+			while (liner != null) 
+			{
+				if (liner.getClickerName().equals(cName))
+				{
+					fos.write(new String(gson.toJson(clicker) + "\n").getBytes());
+				}
+				else
+				{
+					fos.write(new String(gson.toJson(liner) + "\n").getBytes());
+				}
+				liner = gson.fromJson(in.readLine(), Clicker.class);
+			}
 			fos.close();
+			
+			File file = new File(TEMP);
+			File file2 = new File("haha");
+			
+			if (file.renameTo(file2)) {  
+				
+				Toast toast=Toast.makeText(getApplicationContext(), "good", Toast.LENGTH_SHORT);  
+			    toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL, 0, 0);
+			    toast.show();
+			   } 
+			else {
+				Toast toast=Toast.makeText(getApplicationContext(), "bad", Toast.LENGTH_SHORT);  
+			    toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL, 0, 0);
+			    toast.show();  
+			   }  
+			
+			
+			
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

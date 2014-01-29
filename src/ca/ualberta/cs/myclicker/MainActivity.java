@@ -9,7 +9,6 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Date;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import android.os.Bundle;
 import android.annotation.SuppressLint;
@@ -35,8 +34,7 @@ public class MainActivity extends Activity
 	private static final String FILENAME = "file.sav";
 	private EditText bodyText;
 	private ListView clickerList;
-	final GsonBuilder gsonBuilder = new GsonBuilder();
-	final Gson gson = gsonBuilder.create();
+	final Gson gson = new Gson();
 	final Clicker clicker = new Clicker();
 
 	@Override
@@ -49,11 +47,6 @@ public class MainActivity extends Activity
 		Button newClicker = (Button) findViewById(R.id.newClicker);
 		bodyText = (EditText) findViewById(R.id.cName);
 		clickerList = (ListView) findViewById(R.id.clickers);
-		
-		gsonBuilder.setPrettyPrinting();
-		gsonBuilder.registerTypeAdapter(Clicker.class, new CSerialiser());
-		 
-		
 		
 		newClicker.setOnClickListener(new OnClickListener()
 		{
@@ -132,12 +125,6 @@ public class MainActivity extends Activity
 		try {
 			FileOutputStream fos = openFileOutput(FILENAME,
 					Context.MODE_APPEND);
-			
-			final String json = gson.toJson(clicker);
-			
-			Toast toast=Toast.makeText(getApplicationContext(), json, Toast.LENGTH_SHORT);  
-		    toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL, 0, 0);
-		    toast.show();
 			
 			fos.write(new String(gson.toJson(clicker) + "\n").getBytes());
 			fos.close();
