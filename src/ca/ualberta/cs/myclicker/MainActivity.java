@@ -75,6 +75,7 @@ public class MainActivity extends Activity
 				{
 					boolean save = true; 
 					clicker.setClickerName(name.trim());
+					clicker.setCreate_Date(new Date(System.currentTimeMillis()));
 					String[] cNames = loadsFromFile();
 					for (int i = 0; i < cNames.length; i++)
 					{
@@ -90,7 +91,7 @@ public class MainActivity extends Activity
 					}
 					if(save == true)
 					{
-						saveInFile(clicker, new Date(System.currentTimeMillis()));
+						saveInFile(clicker);
 					}
 
 					cNames = loadsFromFile();
@@ -149,7 +150,7 @@ public class MainActivity extends Activity
 		return cNames.toArray(new String[cNames.size()]);
 	}
 
-	void saveInFile(Clicker clicker, Date date) {
+	void saveInFile(Clicker clicker) {
 		try {
 			FileOutputStream fos = openFileOutput(FILENAME,
 					Context.MODE_APPEND);  
