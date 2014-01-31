@@ -34,8 +34,8 @@ public class MainActivity extends Activity
 	private static final String FILENAME = "file.sav";
 	private EditText bodyText;
 	private ListView clickerList;
-	final Gson gson = new Gson();
-	final Clicker clicker = new Clicker();
+	private final Gson gson = new Gson();
+	private final Clicker clicker = new Clicker();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -57,23 +57,42 @@ public class MainActivity extends Activity
 				String name = bodyText.getText().toString();
 				if (name.trim().length() == 0)
 				{
-					Toast toast=Toast.makeText(getApplicationContext(), "Clicker Name Empty", Toast.LENGTH_SHORT);  
+					Toast toast=Toast.makeText(getApplicationContext(), 
+							"Clicker Name Empty", Toast.LENGTH_SHORT);  
 				    toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL, 0, 0);
 				    toast.show();
 				}
 				else if (name.trim().length() > 10)
 				{
-					Toast toast=Toast.makeText(getApplicationContext(), "Limit size of 10 characters", Toast.LENGTH_SHORT);  
+					Toast toast=Toast.makeText(getApplicationContext(), 
+							"Limit size of 10 characters", Toast.LENGTH_SHORT);  
 				    toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL, 0, 0);
 				    toast.show();
 				}
 				else
 				{
+					boolean save = true; 
 					clicker.setClickerName(name.trim());
 					clicker.setCount("0");
-					
-					saveInFile(clicker, new Date(System.currentTimeMillis()));
 					String[] cNames = loadsFromFile();
+					for (int i = 0; i < cNames.length; i++)
+					{
+						if(cNames[i].equals(name.trim()))
+						{
+							save = false;
+							Toast toast=Toast.makeText(getApplicationContext(), 
+									"Name exists", Toast.LENGTH_SHORT);  
+						    toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL, 0, 0);
+						    toast.show();
+							break;
+						}
+					}
+					if(save == true)
+					{
+						saveInFile(clicker, new Date(System.currentTimeMillis()));
+					}
+					
+					cNames = loadsFromFile();
 					ArrayAdapter<String> newadapter = new ArrayAdapter<String>(MainActivity.this,
 							R.layout.list_item, cNames);
 					clickerList.setAdapter(newadapter);

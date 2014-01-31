@@ -14,23 +14,6 @@
       android:textSize="35sp"
       android:textStyle="bold" />
 
-  <Button
-      android:id="@+id/delete"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_alignParentRight="true"
-      android:layout_alignParentTop="true"
-      android:text="Delete" />
-
-  <Button
-      android:id="@+id/rename"
-      style="?android:attr/buttonStyleSmall"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_alignParentTop="true"
-      android:layout_toLeftOf="@+id/delete"
-      android:text="Rename" />
-
   <TextView
       android:id="@+id/counter"
       android:layout_width="wrap_content"
@@ -66,5 +49,31 @@
       android:layout_alignParentLeft="true"
       android:layout_below="@+id/add"
       android:text="Reset Counter" />
+
+  <Button
+      android:id="@+id/history"
+      style="?android:attr/buttonStyleSmall"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_alignParentLeft="true"
+      android:layout_below="@+id/zero"
+      android:text="View Clicker history" />
+
+  <Button
+      android:id="@+id/delete"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_alignParentRight="true"
+      android:layout_below="@+id/rename"
+      android:text="Delete" />
+
+  <Button
+      android:id="@+id/rename"
+      style="?android:attr/buttonStyleSmall"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_alignParentLeft="true"
+      android:layout_below="@+id/history"
+      android:text="Rename" />
     
 </RelativeLayout>
