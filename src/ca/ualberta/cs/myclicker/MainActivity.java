@@ -50,6 +50,7 @@ public class MainActivity extends Activity
 		bodyText = (EditText) findViewById(R.id.cName);
 		clickerList = (ListView) findViewById(R.id.clickers);
 
+		//This creates a new clicker.
 		newClicker.setOnClickListener(new OnClickListener()
 		{
 			@SuppressLint("NewApi")
@@ -104,6 +105,7 @@ public class MainActivity extends Activity
 			}
 		});
 
+		//This allows you to click on your clickers in the list. 
 		clickerList.setOnItemClickListener(new OnItemClickListener() 
 		{
 			@Override
@@ -119,7 +121,7 @@ public class MainActivity extends Activity
 
 	}
 
-
+	//Loads file.
 	private String[] loadsFromFile() {
 		ArrayList<String> cNames = new ArrayList<String>();
 		try {
@@ -150,6 +152,7 @@ public class MainActivity extends Activity
 		return cNames.toArray(new String[cNames.size()]);
 	}
 
+	//Saves file
 	void saveInFile(Clicker clicker) {
 		try {
 			FileOutputStream fos = openFileOutput(FILENAME,

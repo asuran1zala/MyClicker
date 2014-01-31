@@ -26,3 +26,11 @@ you are able to increment the counter with the plus button. Below that
 there is a reset counter button that will set your counter back to zero. The 
 View Clicker History button allow you to see statistics on your clicker. 
 Rename will rename your clicker and Delete will delete our clicker.
+
+Sources:
+http://stackoverflow.com/questions/1377279/java-find-a-line-in-a-file-and-remove
+http://stackoverflow.com/questions/19704996/how-to-replace-a-value-of-a-json-file-in-java
+http://www.androidhive.info/2011/09/how-to-show-alert-dialog-in-android/
+http://www.javabeat.net/toast-message-android/
+http://stackoverflow.com/questions/10227543/determine-file-exists-using-getfilestreampath-sorta-working
+http://www.javacreed.com/category/gson/

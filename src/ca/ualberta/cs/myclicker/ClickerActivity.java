@@ -57,12 +57,13 @@ public class ClickerActivity extends Activity
 
 
 		Intent i = getIntent();
-		// getting attached intent data
+		
 		cName = i.getStringExtra("cName");
-		// displaying selected product name
+		
 		txtProduct.setText(cName + ": ");
 		CLICKERFILE = cName + ".sav";
 
+		//Initial setup of the Activity by calling the relevant files.
 		file = getBaseContext().getFileStreamPath(CLICKERFILE);
 		if(file.exists())
 		{
@@ -77,7 +78,7 @@ public class ClickerActivity extends Activity
 
 
 
-
+		//Incrementing button
 		Button addbutton = (Button) findViewById(R.id.add);
 		addbutton.setOnClickListener(new OnClickListener() 
 		{
@@ -100,8 +101,10 @@ public class ClickerActivity extends Activity
 
 			}
 		});
-		Button minusbutton = (Button) findViewById(R.id.zero);
-		minusbutton.setOnClickListener(new OnClickListener() 
+		
+		//resets counter
+		Button zerobutton = (Button) findViewById(R.id.zero);
+		zerobutton.setOnClickListener(new OnClickListener() 
 		{
 
 			@Override
@@ -118,6 +121,8 @@ public class ClickerActivity extends Activity
 
 			}
 		});
+		
+		//Delete Clicker
 		Button delbutton = (Button) findViewById(R.id.delete);
 		delbutton.setOnClickListener(new OnClickListener() 
 		{
@@ -151,7 +156,7 @@ public class ClickerActivity extends Activity
 			}
 		});
 
-
+		//Rename Clicker
 		Button renamebutton = (Button) findViewById(R.id.rename);
 		renamebutton.setOnClickListener(new OnClickListener() 
 		{
@@ -253,7 +258,7 @@ public class ClickerActivity extends Activity
 	}
 
 
-
+	//Load file
 	private void loadFromFile(String file) {
 		try {
 			List<String> cArray = new ArrayList<String>();
@@ -285,6 +290,7 @@ public class ClickerActivity extends Activity
 		}
 	}
 
+	//Save File
 	private void saveInFile(String text, Date date) {
 		try {
 
@@ -304,7 +310,7 @@ public class ClickerActivity extends Activity
 		}
 	}
 
-
+	//Delete Clicker method
 	private void deleteClicker() {
 		try {
 
