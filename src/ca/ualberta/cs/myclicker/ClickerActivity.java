@@ -188,7 +188,7 @@ public class ClickerActivity extends Activity
                 					if(!clicker.getClickerName().equals(name.trim()))
                 					{
                 						
-                						boolean rename = false; 
+                						boolean rename = true; 
                 						
                 						for (int i = 0; i < clickerArray.length; i++)
                 						{
