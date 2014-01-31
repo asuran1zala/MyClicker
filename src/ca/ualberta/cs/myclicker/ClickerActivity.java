@@ -2,16 +2,15 @@ package ca.ualberta.cs.myclicker;
 
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import com.google.gson.Gson;
 
@@ -22,23 +21,23 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 public class ClickerActivity extends Activity
 {
-	public static final String FILENAME= "file.sav";	
-	public static final String TEMP = "temp.sav";
-	public TextView number;
-	public int count;
-	public String cName = "";
-	final Gson gson = new Gson();
-	Clicker clicker = new Clicker();
+	private static final String FILENAME = "file.sav";	
+	private static String CLICKERFILE = "";
+	private TextView number;
+	private int count;
+	private String cName = "";
+	private final Gson gson = new Gson();
+	private Clicker clicker = new Clicker();
+	private File file;
+	private String[] clickerArray;
 	
 	
 	@Override
@@ -59,9 +58,18 @@ public class ClickerActivity extends Activity
         cName = i.getStringExtra("cName");
         // displaying selected product name
         txtProduct.setText(cName + ": ");
+        CLICKERFILE = cName + ".sav";
         
-        String counter = loadFromFile();
-        number.setText(String.valueOf(counter));
+        file = getBaseContext().getFileStreamPath(CLICKERFILE);
+        if(file.exists())
+        {
+        	loadFromFile(CLICKERFILE);
+        }
+        else
+        {
+        	loadFromFile(FILENAME);
+        }
+        number.setText(String.valueOf(clicker.getCount()));
         
         
         
@@ -74,7 +82,7 @@ public class ClickerActivity extends Activity
 			@Override
         	public void onClick(View v) 
         	{
-				//setResult(RESULT_OK);
+				setResult(RESULT_OK);
 				String text = number.getText().toString();
 				
 				
@@ -89,7 +97,7 @@ public class ClickerActivity extends Activity
         		
         	}
         });
-        Button minusbutton = (Button) findViewById(R.id.minus);
+        Button minusbutton = (Button) findViewById(R.id.zero);
         minusbutton.setOnClickListener(new OnClickListener() 
         {
 
@@ -98,18 +106,12 @@ public class ClickerActivity extends Activity
         	{
 				setResult(RESULT_OK);
 				String text = number.getText().toString();
+				count = 0;
 				
-				count = Integer.parseInt(text);
-				
-				count--;
-				if(count < 0)
-				{
-					count = 0;
-				}
         		number.setText(String.valueOf(count));
         		text = number.getText().toString();
-        		
-        		//saveInFile(text, new Date(System.currentTimeMillis()));
+        		clicker.setCount(text);
+        		saveInFile(text, new Date(System.currentTimeMillis()));
         		
         	}
         });
@@ -123,17 +125,25 @@ public class ClickerActivity extends Activity
                 builder1.setMessage("Are you sure you want delete this clicker?");
                 builder1.setCancelable(true);
                 builder1.setPositiveButton("Yes",
-                        new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                });
+                		new DialogInterface.OnClickListener() 
+                		{
+                			public void onClick(DialogInterface dialog, int id) 
+                			{
+                				file.delete();
+                				deleteClicker();
+                				Intent i = new Intent(getApplicationContext(), MainActivity.class);
+                				startActivity(i);
+                				dialog.cancel();
+                			}
+                		});
                 builder1.setNegativeButton("No",
-                        new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                });
+                        new DialogInterface.OnClickListener() 
+                		{
+                    		public void onClick(DialogInterface dialog, int id) 
+                    		{
+                    			dialog.cancel();
+                    		}
+                		});
 
                 AlertDialog alert11 = builder1.create();
                 alert11.show();
@@ -143,23 +153,28 @@ public class ClickerActivity extends Activity
 	}
 
 	
-	private String loadFromFile() {
-		String line = "";
+	
+	private void loadFromFile(String file) {
 		try {
-			FileInputStream fis = openFileInput(FILENAME);
+			List<String> cArray = new ArrayList<String>();
+			FileInputStream fis = openFileInput(file);
 			BufferedReader in = new BufferedReader(new InputStreamReader(fis));
 			
-			Clicker liner = gson.fromJson(in.readLine(), Clicker.class);
-			while (liner != null) 
+			Clicker line = gson.fromJson(in.readLine(), Clicker.class);
+			while (line != null) 
 			{
-				if (liner.getClickerName().equals(cName))
+				if (line.getClickerName().equals(cName))
 				{
-					clicker = liner;
-					line = liner.getCount();
-					break;
+					clicker = line;
 				}
-				liner = gson.fromJson(in.readLine(), Clicker.class);
+				else if (!line.getClickerName().equals(cName))
+				{
+					cArray.add(gson.toJson(line).toString());
+				}
+				
+				line = gson.fromJson(in.readLine(), Clicker.class);
 			}
+			clickerArray = cArray.toArray(new String[cArray.size()]);
 
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -168,48 +183,40 @@ public class ClickerActivity extends Activity
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return line;
 	}
 	
 	private void saveInFile(String text, Date date) {
 		try {
-			FileInputStream fis = openFileInput(FILENAME);
-			BufferedReader in = new BufferedReader(new InputStreamReader(fis));
 			
-			FileOutputStream fos = openFileOutput(TEMP,
+			FileOutputStream fos = openFileOutput(CLICKERFILE,
 					Context.MODE_PRIVATE);
 			
-			Clicker liner = gson.fromJson(in.readLine(), Clicker.class);
-			while (liner != null) 
-			{
-				if (liner.getClickerName().equals(cName))
-				{
-					fos.write(new String(gson.toJson(clicker) + "\n").getBytes());
-				}
-				else
-				{
-					fos.write(new String(gson.toJson(liner) + "\n").getBytes());
-				}
-				liner = gson.fromJson(in.readLine(), Clicker.class);
-			}
+			fos.write(new String(gson.toJson(clicker)).getBytes());
 			fos.close();
+
 			
-			File file = new File(TEMP);
-			File file2 = new File("haha");
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	
+	private void deleteClicker() {
+		try {
 			
-			if (file.renameTo(file2)) {  
-				
-				Toast toast=Toast.makeText(getApplicationContext(), "good", Toast.LENGTH_SHORT);  
-			    toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL, 0, 0);
-			    toast.show();
-			   } 
-			else {
-				Toast toast=Toast.makeText(getApplicationContext(), "bad", Toast.LENGTH_SHORT);  
-			    toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL, 0, 0);
-			    toast.show();  
-			   }  
+			FileOutputStream fos = openFileOutput(FILENAME,
+					Context.MODE_PRIVATE);
+			for (int i = 0; i < clickerArray.length; i++)
+			{
+				fos.write(new String(clickerArray[i] + "\n").getBytes());
+			}
 			
-			
+			fos.close();
+
 			
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block

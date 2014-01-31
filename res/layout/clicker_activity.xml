@@ -11,45 +11,8 @@
       android:layout_height="wrap_content"
       android:padding="10dip"
       android:textColor="#ffffff"
-      android:textSize="25sp"
+      android:textSize="35sp"
       android:textStyle="bold" />
-
-  <Button
-      android:id="@+id/add"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_alignParentLeft="true"
-      android:layout_below="@+id/Clicker_Name"
-      android:text="+"
-      android:textSize="60sp" />
-
-  <Button
-      android:id="@+id/minus"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_alignParentLeft="true"
-      android:layout_below="@+id/add"
-      android:text="-"
-      android:textSize="60sp" />
-
-  <TextView
-      android:id="@+id/counter"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_alignParentLeft="true"
-      android:layout_below="@+id/minus"
-      android:text="Count:"
-      android:textSize="25sp" />
-
-  <TextView
-      android:id="@+id/number"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_alignBaseline="@+id/counter"
-      android:layout_alignBottom="@+id/counter"
-      android:layout_toRightOf="@+id/counter"
-      android:text="0"
-  	  android:textSize="25sp"/>
 
   <Button
       android:id="@+id/delete"
@@ -67,5 +30,41 @@
       android:layout_alignParentTop="true"
       android:layout_toLeftOf="@+id/delete"
       android:text="Rename" />
+
+  <TextView
+      android:id="@+id/counter"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignParentLeft="true"
+      android:layout_below="@+id/Clicker_Name"
+      android:text="Count:"
+      android:textSize="25sp" />
+
+  <TextView
+      android:id="@+id/number"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignBaseline="@+id/counter"
+      android:layout_alignBottom="@+id/counter"
+      android:layout_toRightOf="@+id/counter"
+      android:text="0"
+      android:textSize="25sp" />
+
+  <Button
+      android:id="@+id/add"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_alignParentLeft="true"
+      android:layout_below="@+id/counter"
+      android:text="+"
+      android:textSize="60sp" />
+
+  <Button
+      android:id="@+id/zero"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_alignParentLeft="true"
+      android:layout_below="@+id/add"
+      android:text="Reset Counter" />
     
 </RelativeLayout>

@@ -69,7 +69,7 @@ public class MainActivity extends Activity
 				}
 				else
 				{
-					clicker.setClickerName(name);
+					clicker.setClickerName(name.trim());
 					clicker.setCount("0");
 					
 					saveInFile(clicker, new Date(System.currentTimeMillis()));
@@ -124,7 +124,7 @@ public class MainActivity extends Activity
 	void saveInFile(Clicker clicker, Date date) {
 		try {
 			FileOutputStream fos = openFileOutput(FILENAME,
-					Context.MODE_APPEND);
+					Context.MODE_APPEND); 
 			
 			fos.write(new String(gson.toJson(clicker) + "\n").getBytes());
 			fos.close();
