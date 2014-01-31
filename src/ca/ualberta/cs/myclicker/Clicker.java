@@ -4,7 +4,7 @@ package ca.ualberta.cs.myclicker;
 public class Clicker
 {
 	private String ClickerName;
-	protected String Count;
+	protected String Count = "0";
 	
 	public String getClickerName()
 	{
@@ -31,8 +31,8 @@ public class Clicker
 	}
 	
 	
-	/**@Override
+	@Override
     public String toString() {
-        return ClickerName + " - " + Count;
-    }**/
+        return ClickerName + ", " + Count;
+    }
 }

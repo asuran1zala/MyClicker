@@ -1,6 +1,7 @@
 package ca.ualberta.cs.myclicker;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -30,12 +31,13 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity
 {
-	
+
 	private static final String FILENAME = "file.sav";
 	private EditText bodyText;
 	private ListView clickerList;
 	private final Gson gson = new Gson();
 	private final Clicker clicker = new Clicker();
+	private String cName = "";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -43,11 +45,11 @@ public class MainActivity extends Activity
 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
+
 		Button newClicker = (Button) findViewById(R.id.newClicker);
 		bodyText = (EditText) findViewById(R.id.cName);
 		clickerList = (ListView) findViewById(R.id.clickers);
-		
+
 		newClicker.setOnClickListener(new OnClickListener()
 		{
 			@SuppressLint("NewApi")
@@ -59,21 +61,20 @@ public class MainActivity extends Activity
 				{
 					Toast toast=Toast.makeText(getApplicationContext(), 
 							"Clicker Name Empty", Toast.LENGTH_SHORT);  
-				    toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL, 0, 0);
-				    toast.show();
+					toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL, 0, 0);
+					toast.show();
 				}
 				else if (name.trim().length() > 10)
 				{
 					Toast toast=Toast.makeText(getApplicationContext(), 
 							"Limit size of 10 characters", Toast.LENGTH_SHORT);  
-				    toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL, 0, 0);
-				    toast.show();
+					toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL, 0, 0);
+					toast.show();
 				}
 				else
 				{
 					boolean save = true; 
 					clicker.setClickerName(name.trim());
-					clicker.setCount("0");
 					String[] cNames = loadsFromFile();
 					for (int i = 0; i < cNames.length; i++)
 					{
@@ -82,8 +83,8 @@ public class MainActivity extends Activity
 							save = false;
 							Toast toast=Toast.makeText(getApplicationContext(), 
 									"Name exists", Toast.LENGTH_SHORT);  
-						    toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL, 0, 0);
-						    toast.show();
+							toast.setGravity(Gravity.CENTER|Gravity.CENTER_HORIZONTAL, 0, 0);
+							toast.show();
 							break;
 						}
 					}
@@ -91,41 +92,49 @@ public class MainActivity extends Activity
 					{
 						saveInFile(clicker, new Date(System.currentTimeMillis()));
 					}
-					
+
 					cNames = loadsFromFile();
 					ArrayAdapter<String> newadapter = new ArrayAdapter<String>(MainActivity.this,
 							R.layout.list_item, cNames);
 					clickerList.setAdapter(newadapter);
 					newadapter.notifyDataSetChanged();
 				}
-				
+
 			}
 		});
-		
+
 		clickerList.setOnItemClickListener(new OnItemClickListener() 
 		{
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
-	              int position, long id)
+					int position, long id)
 			{
-				String cName = ((TextView) view).getText().toString();
+				String[] cName = ((TextView) view).getText().toString().split(",");
 				Intent i = new Intent(getApplicationContext(), ClickerActivity.class);
-				i.putExtra("cName", cName);
+				i.putExtra("cName", cName[0]);
 				startActivity(i);
 			}
 		});
-		
+
 	}
-	
+
 
 	private String[] loadsFromFile() {
 		ArrayList<String> cNames = new ArrayList<String>();
 		try {
 			FileInputStream fis = openFileInput(FILENAME);
 			BufferedReader in = new BufferedReader(new InputStreamReader(fis));
-			
+
 			Clicker line = gson.fromJson(in.readLine(), Clicker.class);
 			while (line != null) {
+				File file = getBaseContext().getFileStreamPath(line.getClickerName() + ".sav");
+				if(file.exists())
+				{
+					BufferedReader num = new BufferedReader(new InputStreamReader(
+						openFileInput(line.getClickerName() + ".sav")));
+					
+				}
+				
 				cNames.add(line.getClickerName());
 				line = gson.fromJson(in.readLine(), Clicker.class);
 			}
@@ -139,12 +148,12 @@ public class MainActivity extends Activity
 		}
 		return cNames.toArray(new String[cNames.size()]);
 	}
-	
+
 	void saveInFile(Clicker clicker, Date date) {
 		try {
 			FileOutputStream fos = openFileOutput(FILENAME,
 					Context.MODE_APPEND);  
-			
+
 			fos.write(new String(gson.toJson(clicker) + "\n").getBytes());
 			fos.close();
 		} catch (FileNotFoundException e) {
@@ -155,7 +164,7 @@ public class MainActivity extends Activity
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Override
 	protected void onStart() {
 		// TODO Auto-generated method stub
@@ -165,7 +174,7 @@ public class MainActivity extends Activity
 				R.layout.list_item, cNames);
 		clickerList.setAdapter(adapter);
 	}
-	
+
 }
 
 
